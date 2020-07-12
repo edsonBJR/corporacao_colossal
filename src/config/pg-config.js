@@ -1,11 +1,20 @@
-import { Pool } from 'pg';
+import Pool from 'pg-pool';
+import url from 'url';
 
-const pool = new Pool({
-    user: 'edsonjr',
-    host: 'localhost',
-    database: 'corporacao_colossal',
-    password: '123r1xx@',
-    port: 5432,
-});
+const params = url.parse(process.env.DATABASE_URL);
+const auth = params.auth.split(':');
+
+const config = {
+    user: auth[0],
+    password: auth[1],
+    host: params.hostname,
+    port: params.port,
+    database: params.pathname.split('/')[1],
+    ssl: {
+        rejectUnauthorized: false
+    }
+};
+
+const pool = new Pool(config);
 
 export default pool;

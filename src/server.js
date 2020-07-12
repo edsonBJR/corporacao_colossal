@@ -9,7 +9,7 @@ server.use(bodyParser.json());
 
 server.use('/feriados', feriadosRouter);
 
-server.listen(5000, function() {
+server.listen(+process.env.PORT || 5000, function() {
     console.log("Server is running ...")
 });
 
