@@ -4,11 +4,11 @@ import FeriadosServices from '../services/feriados-services';
 
 const router = express.Router();
 
-router.get('/:data', async(req, res) => {
+router.get('/:ibge/:ano-:mes-:dia', async(req, res) => {
     try {
-        const { data } = req.params;
+        const { ibge, ano, mes, dia } = req.params;
         const services = new FeriadosServices();
-        const result = await services.buscarFeriado(data);
+        const result = await services.buscarFeriado({ ibge, ano, mes, dia });
         res.status(200).json(result);
     } catch (err) {
         console.log(err);

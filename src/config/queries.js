@@ -8,7 +8,7 @@ export default class QueryExecutor {
         this.connection = connection;
     }
 
-    createQueryBuscarFeriado(data) {
+    createQueryBuscarFeriado({ ibge, ano, mes, dia }) {
         return `select * from feriados 
             where mes_dia = '${data}'`;
     }
