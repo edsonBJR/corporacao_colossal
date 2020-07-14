@@ -1,10 +1,4 @@
-const feriadosMoveis = {
-    carnaval: 'Carnaval',
-    'corpus-christi': 'Corpus Christi',
-    'sexta-feira-santa': 'Sexta-Feira Santa'
-};
-
-const pascoa = function(ano) {
+export const pascoa = function(ano) {
     const b = parseInt(ano / 100);
     const a = ano % 19;
     const c = ano % 100;
@@ -22,11 +16,12 @@ const pascoa = function(ano) {
 
     return {
         dia: DIA,
-        mes: MES
+        mes: MES,
+        name: feriadosMoveis.pascoa.name,
     };
 };
 
-const carnaval = function(ano) {
+export const carnaval = function(ano) {
     const { dia, mes } = pascoa(ano);
     const dataPascoa = new Date(`${ano}-${mes}-${dia}`);
     const days = 47;
@@ -35,11 +30,12 @@ const carnaval = function(ano) {
 
     return {
         dia: result.getDate(),
-        mes: result.getMonth() + 1
+        mes: result.getMonth() + 1,
+        name: feriadosMoveis.carnaval.name,
     };
 };
 
-const corpusChristi = function(ano) {
+export const corpusChristi = function(ano) {
     const { dia, mes } = pascoa(ano);
     const dataPascoa = new Date(`${ano}-${mes}-${dia}`);
     const days = 60;
@@ -48,12 +44,13 @@ const corpusChristi = function(ano) {
 
     return {
         dia: result.getDate(),
-        mes: result.getMonth() + 1
+        mes: result.getMonth() + 1,
+        name: feriadosMoveis["corpus-christi"].name,
     };
 
 };
 
-const sextaFeiraSanta = function(ano) {
+export const sextaFeiraSanta = function(ano) {
     const { dia, mes } = pascoa(ano);
     const dataPascoa = new Date(`${ano}-${mes}-${dia}`);
     const days = 2;
@@ -62,14 +59,26 @@ const sextaFeiraSanta = function(ano) {
 
     return {
         dia: result.getDate(),
-        mes: result.getMonth() + 1
+        mes: result.getMonth() + 1,
+        name: feriadosMoveis["sexta-feira-santa"].name,
     };
 };
 
-module.exports = {
-    pascoa,
-    carnaval,
-    corpusChristi,
-    sextaFeiraSanta,
-    feriadosMoveis
+export const feriadosMoveis = {
+    pascoa: {
+        name: 'Páscoa',
+        func: pascoa,
+    },
+    carnaval: {
+        name: 'Carnaval',
+        func: carnaval,
+    },
+    'corpus-christi': {
+        name: 'Corpus Christi',
+        func: corpusChristi,
+    },
+    'sexta-feira-santa': {
+        name: 'Sexta-Feira Santa',
+        func: sextaFeiraSanta,
+    }
 };

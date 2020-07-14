@@ -1,6 +1,6 @@
-export class HolidayNotFoundError extends Error {
+export class NotFoundError extends Error {
     constructor(message, ...params) {
-        super({ name: 'HolidayNotFoundError' }, message, ...params);
+        super({ name: 'NotFoundError' }, message, ...params);
     }
 }
 
