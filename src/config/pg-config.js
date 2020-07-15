@@ -1,7 +1,7 @@
 import Pool from 'pg-pool';
 import url from 'url';
 
-const params = url.parse(process.env.DATABASE_URL);
+const params = url.parse(process.env.DATABASE_CONNECTION_POOL_URL || process.env.DATABASE_URL);
 const auth = params.auth.split(':');
 
 const config = {
