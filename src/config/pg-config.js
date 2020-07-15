@@ -11,6 +11,9 @@ const config = {
     port: params.port,
     database: params.pathname.split('/')[1],
     schema: "public",
+    max: 20,
+    idleTimeoutMillis: 1000,
+    connectionTimeoutMillis: 1000,
     ssl: {
         rejectUnauthorized: false
     }
