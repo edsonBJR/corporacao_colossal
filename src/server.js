@@ -9,6 +9,11 @@ server.use(bodyParser.json());
 
 server.use('/feriados', feriadosRouter);
 
+server.use(function(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send(err.message);
+})
+
 server.listen(+process.env.PORT || 5000, function() {
     console.log("Server is running ...")
 });
