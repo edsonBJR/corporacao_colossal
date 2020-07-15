@@ -12,7 +12,7 @@ const config = {
     database: params.pathname.split('/')[1],
     schema: "public",
     max: 20,
-    idleTimeoutMillis: 1000,
+    idleTimeoutMillis: 2000,
     connectionTimeoutMillis: 5000,
     ssl: {
         rejectUnauthorized: false
