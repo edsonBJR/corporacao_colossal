@@ -5,7 +5,8 @@
     "scripts": {
         "build": "node_modules/.bin/babel src --out-dir bin",
         "start:dev": "NODE_ENV=development babel-node index.js",
-        "start": "NODE_ENV=production node index.js"
+        "start": "NODE_ENV=production node index.js",
+        "heroku-postbuild": "npm run build"
     },
     "author": "Edson Barbosa Junior",
     "devDependencies": {
