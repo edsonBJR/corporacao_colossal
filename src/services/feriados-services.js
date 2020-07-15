@@ -1,13 +1,15 @@
-import pool from '../config/pg-config';
 import QueryExecutor from '../config/queries';
 import * as FeriadosMoveis from '../config/utils';
 import { NotFoundError, ForbiddenError } from '../errors/errors';
 
 export default class FeriadosServices {
 
+    constructor(connection) {
+        this.connection = connection;
+    }
+
     async buscarFeriado({ ibge, ano, mes, dia }) {
-        const connection = await pool.connect();
-        const qe = new QueryExecutor(connection);
+        const qe = new QueryExecutor(this.connection);
 
         // Busca feriados móveis
         for (const feriadoMovel in FeriadosMoveis.feriadosMoveis) {
@@ -18,7 +20,6 @@ export default class FeriadosServices {
                 const result = await qe.getFeriado({ ibge, chaveFeriado: feriadoMovel });
 
                 if (result.length) {
-                    connection.release();
                     return {
                         codigo_ibge: result[0].codigo_ibge,
                         nome: feriadoData.name,
@@ -36,7 +37,6 @@ export default class FeriadosServices {
 
         // Buscar feriados fixos
         const result = await qe.getFeriado({ ibge, mes, dia });
-        connection.release();
 
         if (result.length) {
             return result[0];
@@ -46,8 +46,7 @@ export default class FeriadosServices {
     }
 
     async cadastrarFeriado({ ibge, mes, dia, nome }) {
-        const connection = await pool.connect();
-        const qe = new QueryExecutor(connection);
+        const qe = new QueryExecutor(this.connection);
 
         const result = await qe.getFeriado({ ibge, mes, dia });
 
@@ -67,17 +66,14 @@ export default class FeriadosServices {
 
         if (result.length) {
             await qe.atualizarFeriado({ ibge, mes, dia, nome });
-            connection.release();
             return;
         }
         await qe.cadastrarFeriado({ ibge, mes, dia, nome, abrangencia });
-        connection.release();
         return;
     }
 
     async deletarFeriado({ ibge, mes, dia }) {
-        const connection = await pool.connect();
-        const qe = new QueryExecutor(connection);
+        const qe = new QueryExecutor(this.connection);
 
         const result = await qe.getFeriado({ ibge, mes, dia });
 
@@ -100,7 +96,6 @@ export default class FeriadosServices {
         for (const r of result) {
             if (r.abrangencia == abrangencia) {
                 await qe.deletarFeriado({ ibge, mes, dia });
-                connection.release();
                 return;
             }
         }
@@ -110,8 +105,7 @@ export default class FeriadosServices {
     }
 
     async cadastrarFeriadoMovel({ ibge, chaveFeriado }) {
-        const connection = await pool.connect();
-        const qe = new QueryExecutor(connection);
+        const qe = new QueryExecutor(this.connection);
 
         const result = await qe.getFeriado({ ibge, chaveFeriado });
 
@@ -130,18 +124,15 @@ export default class FeriadosServices {
         }
 
         if (result.length) {
-            connection.release();
             return;
         }
 
         await qe.cadastrarFeriadoMovel({ ibge, chaveFeriado, abrangencia });
-        connection.release();
         return;
     }
 
     async deletarFeriadoMovel({ ibge, chaveFeriado }) {
-        const connection = await pool.connect();
-        const qe = new QueryExecutor(connection);
+        const qe = new QueryExecutor(this.connection);
 
         const result = await qe.getFeriado({ ibge, chaveFeriado });
 
@@ -164,7 +155,6 @@ export default class FeriadosServices {
         for (const r of result) {
             if (r.abrangencia == abrangencia) {
                 await qe.deletarFeriadoMovel({ ibge, chaveFeriado });
-                connection.release();
                 return;
             }
         }
