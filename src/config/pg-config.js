@@ -13,7 +13,7 @@ const config = {
     schema: "public",
     max: 20,
     idleTimeoutMillis: 1000,
-    connectionTimeoutMillis: 1000,
+    connectionTimeoutMillis: 5000,
     ssl: {
         rejectUnauthorized: false
     }
