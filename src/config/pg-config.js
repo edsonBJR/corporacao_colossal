@@ -10,6 +10,7 @@ const config = {
     host: params.hostname,
     port: params.port,
     database: params.pathname.split('/')[1],
+    "schema": "public",
     ssl: {
         rejectUnauthorized: false
     }
