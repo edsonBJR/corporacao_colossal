@@ -20,48 +20,50 @@ router.get('/:ibge/:ano-:mes-:dia', async(req, res) => {
 
 });
 
-router.put('/:ibge/:mes-:dia', async(req, res) => {
+router.put('/:ibge/:chave', async(req, res) => {
     try {
-        const { ibge, mes, dia } = req.params;
-        const { nome } = req.body;
+        const { ibge, chave } = req.params;
+        const { name: nome } = req.body;
         const services = new FeriadosServices();
-        await services.cadastrarFeriado({ ibge, nome, mes, dia });
+
+        // Verifica se é mes-dia
+        if (!chave.replace(/(-|[0-9])/ig, '').length) {
+            const mesDia = chave.split('-');
+            await services.cadastrarFeriado({ ibge, nome, mes: mesDia[0], dia: mesDia[1] });
+        } else {
+            // Então é chaveFeriado
+            await services.cadastrarFeriadoMovel({ ibge, chaveFeriado: chave });
+        }
+
         res.status(200).send();
     } catch (err) {
+        console.log(err);
         res.status(500).send();
     }
 });
 
-router.delete('/:ibge/:mes-:dia', async(req, res) => {
+router.delete('/:ibge/:chave', async(req, res) => {
     try {
+        const { ibge, chave } = req.params;
+        const services = new FeriadosServices();
 
-        res.status(200).send();
+        // Verifica se é mes-dia
+        if (!chave.replace(/(-|[0-9])/ig, '').length) {
+            const mesDia = chave.split('-');
+            await services.deletarFeriado({ ibge, mes: mesDia[0], dia: mesDia[1] });
+        } else {
+            await services.deletarFeriadoMovel({ ibge, chaveFeriado: chave });
+        }
+
+        res.status(204).send();
     } catch (err) {
+        console.error(err);
         if (err instanceof NotFoundError) {
             return res.status(404).send();
         }
         if (err instanceof ForbiddenError) {
             return res.status(403).send();
         }
-        res.status(500).send();
-    }
-});
-
-
-router.put('/:ibge/:chaveFeriado', async(req, res) => {
-    try {
-
-        res.status(200).send();
-    } catch (err) {
-        res.status(500).send();
-    }
-});
-
-router.delete('/:ibge/:chaveFeriado', async(req, res) => {
-    try {
-
-        res.status(200).send();
-    } catch (err) {
         res.status(500).send();
     }
 });
